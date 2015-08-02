@@ -1,0 +1,9 @@
+---
+
+- hosts: all
+  sudo: yes
+  roles:
+    - bvansomeren.syslog
+  vars:
+    syslog_host: 
+    syslog_port:
