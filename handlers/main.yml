@@ -1,2 +1,4 @@
 ---
 # handlers file for syslog
+- name: reload rsyslog
+  service: name=rsyslog state=restarted

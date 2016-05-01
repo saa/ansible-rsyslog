@@ -1,2 +1,13 @@
 ---
 # defaults file for syslog
+#
+rsyslog_hostname: localhost
+rsyslog_port: 514
+
+rsyslog_ca_url: 
+rsyslog_ca_file: "/etc/rsyslog-ca.pem"
+rsyslog_ca_hash:
+
+rsyslog_packages:
+- rsyslog
+- rsyslog-gnutls

@@ -1,2 +1,24 @@
 ---
 # tasks file for syslog
+- name: ensure packages are installed
+  package: name="{{ item }}" state=present
+  with_items: "{{ rsyslog_packages }}"
+  notify: reload rsyslog
+
+- name: optionally ensure the CA file is loaded
+  get_url: dest="{{ rsyslog_ca_file }}" url="{{ rsyslog_ca_url }}" checksum="{{ rsyslog_ca_hash }}" owner=root mode=0400
+  when: rsyslog_ca_url is defined
+
+- name: ensure old values are removed
+  lineinfile: dest=/etc/rsyslog.conf regexp='^\{{ item.name }}' state=absent backup=yes
+  with_items: "{{ rsyslog_conf }}"
+  notify: reload rsyslog
+
+- name: ensure rsyslog.conf is updated
+  lineinfile: dest=/etc/rsyslog.conf regexp='^\{{ item.name }}' line='{{ item.name }} {{ item.config }}' backup=yes
+  with_items: "{{ rsyslog_conf }}"
+  notify: reload rsyslog
+
+- name: ensure destination is set
+  lineinfile: dest=/etc/rsyslog.conf regexp="^\*\.\*" line="*.*          @{{ rsyslog_hostname }}:{{ rsyslog_port }}"
+  notify: reload rsyslog
