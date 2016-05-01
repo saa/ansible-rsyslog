@@ -20,5 +20,5 @@
   notify: reload rsyslog
 
 - name: ensure destination is set
-  lineinfile: dest=/etc/rsyslog.conf regexp="^\*\.\*" line="*.*          @{{ rsyslog_hostname }}:{{ rsyslog_port }}"
+  lineinfile: dest=/etc/rsyslog.conf regexp="^\*\.\*" line="*.*          @@{{ rsyslog_hostname }}:{{ rsyslog_port }}"
   notify: reload rsyslog
