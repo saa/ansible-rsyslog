@@ -9,16 +9,7 @@
   get_url: dest="{{ rsyslog_ca_file }}" url="{{ rsyslog_ca_url }}" checksum="{{ rsyslog_ca_hash }}" owner=root mode=0400
   when: rsyslog_ca_url is defined
 
-- name: ensure old values are removed
-  lineinfile: dest=/etc/rsyslog.conf regexp='^\{{ item.name }}' state=absent backup=yes
-  with_items: "{{ rsyslog_conf }}"
-  notify: reload rsyslog
-
 - name: ensure rsyslog.conf is updated
-  lineinfile: dest=/etc/rsyslog.conf regexp='^\{{ item.name }}' line='{{ item.name }} {{ item.config }}' backup=yes
+  template: dest=/etc/rsyslog.conf src=rsyslog-{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.conf  backup=yes
   with_items: "{{ rsyslog_conf }}"
-  notify: reload rsyslog
-
-- name: ensure destination is set
-  lineinfile: dest=/etc/rsyslog.conf regexp="^\*\.\*" line="*.*          @@{{ rsyslog_hostname }}:{{ rsyslog_port }}"
   notify: reload rsyslog
